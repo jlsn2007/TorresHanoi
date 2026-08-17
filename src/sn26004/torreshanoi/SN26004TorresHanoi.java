@@ -44,9 +44,17 @@ public class SN26004TorresHanoi {
         //Show the towers
         
         movimientos = 0;
-        mostarTorres();
+        while (!juegoCompleto()){
+            mostrarTorres();
+            realizarMovimiento();
+        }
         
-    } 
+        // Show the final result
+        mostrarTorres();
+        System.out.println("\n¡Congratulations!. You finish the game in " + movimientos + " moves.");
+        System.out.println("\nThe minimum number of possible moves is " + ((int)Math.pow(2, discos)-1));
+        
+    }//End of the main method 
     
     private static void mostrarTorres() {
     
@@ -67,8 +75,45 @@ public class SN26004TorresHanoi {
                 
                 System.out.print(ESPACIO.repeat(3));
             }
+            
+            System.out.println();
         }
+        
+        //Show base of the towers
+        System.out.println(GUION.repeat(discos * 6 + 10));
+        System.out.println("Torre 1       Torre 2       Torre 3");
+        
+    }// End of the method mostrarTorres
+    
+    private static void realizarMovimiento(){
+        System.out.println("\nEnter the source and destinatio towers (ex. 1 3): ");
+        int origen = scanner.nextInt() -1;
+        int destino = scanner.nextInt() -1; 
+        
+        if (origen < 0 || origen > 2 || destino < 0 || destino > 2){
+            System.out.println("Invalid tower. Origin and destination towers have to stay between 1 and 3");
+            return;
+        }
+        
+        if (torres[origen].isEmpty()){
+            System.out.println("The origin tower must be empty");
+            return;
+        }
+        
+        if (!torres[destino].isEmpty() && torres[origen].peek() > torres[destino].peek()){
+            System.out.println("You can't place a larger disk on top of a smaller one");
+            return;
+        }
+        
+        //Move the disk
+        int disco = torres[origen].pop();
+        torres[destino].push(disco);
+        movimientos++;
         
     }
     
-}
+    private static boolean juegoCompleto(){
+        return torres[2].size() == discos;
+    }
+    
+} 
